@@ -37,7 +37,6 @@ export default function DochiCalendar() {
   const [currentYear, setCurrentYear] = useState(2025)
   const [viewMode, setViewMode] = useState<"Month" | "Week">("Month")
   
-  // State to manage which page is displayed
   const [currentPage, setCurrentPage] = useState("Calendar")
 
   const [windowWidth, setWindowWidth] = useState(typeof window !== "undefined" ? window.innerWidth : 1024)
@@ -139,10 +138,12 @@ export default function DochiCalendar() {
     return weekDays
   }
 
+  // FIX: Updated the appointments data structure to include start and end times for the duration display.
   const appointments = [
-    { id: 1, time: "9:00", title: "Appointment 1" },
-    { id: 2, time: "10:30", title: "Appointment 2" },
-    { id: 3, time: "16:00", title: "Appointment 3" },
+    { id: 1, title: "Appointment 1", startTime: "9.00 A.M.", endTime: "9.30 A.M.", color: "bg-teal-400" },
+    { id: 2, title: "Appointment 2", startTime: "10.30 A.M.", endTime: "13.00 P.M.", color: "bg-purple-400" },
+    { id: 3, title: "Appointment 3", startTime: "16.00 P.M.", endTime: "17.30 P.M.", color: "bg-gray-400" },
+    { id: 4, title: "Appointment 4", startTime: "18.00 P.M.", endTime: "19.00 P.M.", color: "bg-pink-400" },
   ]
   
   const handleNavClick = (page: string) => {
@@ -262,7 +263,7 @@ export default function DochiCalendar() {
         >
           {currentPage === "Calendar" ? (
             <div className="flex flex-col lg:flex-row lg:space-x-8 h-full">
-              <div className="w-full lg:w-72 space-y-6 flex-shrink-0 mb-8 lg:mb-0">
+              <div className="w-full lg:w-72 flex flex-col space-y-6 flex-shrink-0 mb-8 lg:mb-0">
                 <div className="bg-white rounded-lg border border-gray-200 p-4">
                   <div className="flex items-center justify-between mb-4">
                     <button onClick={() => navigateMonth("prev")} className="p-1 rounded hover:bg-gray-100">
@@ -297,23 +298,38 @@ export default function DochiCalendar() {
                   </div>
                 </div>
 
-                <div className="bg-white rounded-lg border border-gray-200">
-                  <CardHeader className="p-4 border-b border-gray-200 flex justify-center items-center">
+                {/* FIX: The entire "Today's Events" card has been updated to match your new screenshot. */}
+                <div className="bg-white rounded-lg border border-gray-200 flex-1 flex flex-col">
+                <CardHeader className="p-4 border-b border-gray-200 flex justify-center items-center">
                     <CardTitle className="text-sm font-semibold flex items-center text-gray-700">
                       <ClipboardList className="w-4 h-4 mr-2" />
                       Today's Events
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="p-4 space-y-4">
-                    {appointments.map((appointment) => (
-                      <div key={appointment.id} className="flex items-start space-x-3">
-                        <div className="w-1.5 h-1.5 bg-gray-800 rounded-full mt-1.5 flex-shrink-0"></div>
-                        <div>
-                          <p className="text-sm font-medium text-gray-800">{appointment.time}</p>
-                          <p className="text-sm text-gray-600">{appointment.title}</p>
-                        </div>
+                  <CardContent className="p-4 space-y-4 flex-1 overflow-y-auto">
+                    <div className="relative">
+                      {/* This div creates the main vertical timeline bar */}
+                      {/* <div className="absolute left-12 top-0 bottom-0 w-px bg-gray-200"></div> */}
+                      <div className="space-y-4">
+                        {appointments.map((appointment) => (
+                           <div key={appointment.id} className="flex items-start">
+                             {/* <div className="w-12 text-right mr-4 flex-shrink-0">
+                               <p className="text-sm text-gray-500 mt-1">{appointment.startTime.split(' ')[0]}</p>
+                             </div> */}
+                             <div className="relative w-full">
+                               {/* This creates the dot on the timeline */}
+                               <div className="absolute top-2 -left-px w-2.5 h-2.5 rounded-full border-2 border-white" style={{ backgroundColor: `var(--color-background)` }}>
+                                 <div className={`w-full h-full rounded-full ${appointment.color}`}></div>
+                               </div>
+                               <div className="pl-6">
+                                 <p className="text-sm font-semibold text-gray-800">{appointment.title}</p>
+                                 <p className="text-xs text-gray-400">{appointment.startTime} – {appointment.endTime}</p>
+                               </div>
+                             </div>
+                           </div>
+                        ))}
                       </div>
-                    ))}
+                    </div>
                   </CardContent>
                 </div>
               </div>
@@ -321,25 +337,25 @@ export default function DochiCalendar() {
               <div className="flex-1 min-w-0">
                 <div className="bg-white rounded-lg border border-gray-200 h-full flex flex-col">
                   <div className="flex items-center justify-between p-4 border-b border-gray-200 flex-shrink-0">
-                    <div className="flex items-center space-x-1 bg-gray-100 rounded-lg p-1">
+                    <div className="flex items-center space-x-1 bg-gray-100 rounded-full p-1">
                       <Button
-                        variant={viewMode === 'Month' ? 'default' : 'ghost'}
+                        variant='ghost'
                         size="sm"
                         onClick={() => setViewMode("Month")}
-                        className={`rounded-md px-4 py-1 text-xs font-semibold ${viewMode === 'Month' ? 'bg-white shadow-sm text-gray-800' : 'text-gray-500'}`}
+                        className={`rounded-full px-4 py-1 text-xs font-semibold transition-colors duration-200 ${viewMode === 'Month' ? 'bg-[#FFD4F2] text-purple-700' : 'text-gray-500 hover:bg-gray-200'}`}
                       >
                         Month
                       </Button>
                       <Button
-                        variant={viewMode === 'Week' ? 'default' : 'ghost'}
+                        variant='ghost'
                         size="sm"
                         onClick={() => setViewMode("Week")}
-                        className={`rounded-md px-4 py-1 text-xs font-semibold ${viewMode === 'Week' ? 'bg-white shadow-sm text-gray-800' : 'text-gray-500'}`}
+                        className={`rounded-full px-4 py-1 text-xs font-semibold transition-colors duration-200 ${viewMode === 'Week' ? 'bg-[#FFD4F2] text-purple-700' : 'text-gray-500 hover:bg-gray-200'}`}
                       >
                         Week
                       </Button>
                     </div>
-                    <div className="text-lg font-semibold text-gray-800">{currentYear}</div>
+                    <div className="text-lg font-semibold text-gray-800 mr-4">{currentYear}</div>
                   </div>
 
                   {viewMode === "Month" ? (
