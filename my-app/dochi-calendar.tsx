@@ -138,12 +138,13 @@ export default function DochiCalendar() {
     return weekDays
   }
 
-  // FIX: Updated the appointments data structure to include start and end times for the duration display.
   const appointments = [
-    { id: 1, title: "Appointment 1", startTime: "9.00 A.M.", endTime: "9.30 A.M.", color: "bg-teal-400" },
-    { id: 2, title: "Appointment 2", startTime: "10.30 A.M.", endTime: "13.00 P.M.", color: "bg-purple-400" },
-    { id: 3, title: "Appointment 3", startTime: "16.00 P.M.", endTime: "17.30 P.M.", color: "bg-gray-400" },
-    { id: 4, title: "Appointment 4", startTime: "18.00 P.M.", endTime: "19.00 P.M.", color: "bg-pink-400" },
+    { id: 1, title: "Appointment 1", startTime: "9.00 A.M.", endTime: "9.30 A.M.", color: "bg-teal-400", hoverColor: "hover:bg-teal-100" },
+    { id: 2, title: "Appointment 2", startTime: "10.30 A.M.", endTime: "13.00 P.M.", color: "bg-purple-400", hoverColor: "hover:bg-purple-100" },
+    { id: 3, title: "Appointment 3", startTime: "16.00 P.M.", endTime: "17.30 P.M.", color: "bg-gray-400", hoverColor: "hover:bg-gray-100" },
+    { id: 4, title: "Appointment 4", startTime: "18.00 P.M.", endTime: "19.00 P.M.", color: "bg-pink-400", hoverColor: "hover:bg-pink-100" },
+    { id: 5, title: "Appointment 5", startTime: "20.00 P.M.", endTime: "21.00 P.M.", color: "bg-blue-400", hoverColor: "hover:bg-blue-100" },
+    { id: 6, title: "Appointment 6", startTime: "22.00 P.M.", endTime: "22.30 P.M.", color: "bg-green-400", hoverColor: "hover:bg-green-100" },
   ]
   
   const handleNavClick = (page: string) => {
@@ -298,8 +299,7 @@ export default function DochiCalendar() {
                   </div>
                 </div>
 
-                {/* FIX: The entire "Today's Events" card has been updated to match your new screenshot. */}
-                <div className="bg-white rounded-lg border border-gray-200 flex-1 flex flex-col">
+                <div className="bg-white rounded-lg border border-gray-200 flex-1 flex flex-col min-h-0">
                 <CardHeader className="p-4 border-b border-gray-200 flex justify-center items-center">
                     <CardTitle className="text-sm font-semibold flex items-center text-gray-700">
                       <ClipboardList className="w-4 h-4 mr-2" />
@@ -308,16 +308,10 @@ export default function DochiCalendar() {
                   </CardHeader>
                   <CardContent className="p-4 space-y-4 flex-1 overflow-y-auto">
                     <div className="relative">
-                      {/* This div creates the main vertical timeline bar */}
-                      {/* <div className="absolute left-12 top-0 bottom-0 w-px bg-gray-200"></div> */}
                       <div className="space-y-4">
                         {appointments.map((appointment) => (
-                           <div key={appointment.id} className="flex items-start">
-                             {/* <div className="w-12 text-right mr-4 flex-shrink-0">
-                               <p className="text-sm text-gray-500 mt-1">{appointment.startTime.split(' ')[0]}</p>
-                             </div> */}
+                           <div key={appointment.id} className={`flex items-start p-2 rounded-lg cursor-pointer transition-colors duration-200 ${appointment.hoverColor}`}>
                              <div className="relative w-full">
-                               {/* This creates the dot on the timeline */}
                                <div className="absolute top-2 -left-px w-2.5 h-2.5 rounded-full border-2 border-white" style={{ backgroundColor: `var(--color-background)` }}>
                                  <div className={`w-full h-full rounded-full ${appointment.color}`}></div>
                                </div>
@@ -342,7 +336,7 @@ export default function DochiCalendar() {
                         variant='ghost'
                         size="sm"
                         onClick={() => setViewMode("Month")}
-                        className={`rounded-full px-4 py-1 text-xs font-semibold transition-colors duration-200 ${viewMode === 'Month' ? 'bg-[#FFD4F2] text-purple-700' : 'text-gray-500 hover:bg-gray-200'}`}
+                        className={`rounded-full px-4 py-1 text-xs font-semibold transition-none ${viewMode === 'Month' ? 'bg-white text-gray-800' : 'text-gray-500 hover:bg-gray-200'}`}
                       >
                         Month
                       </Button>
@@ -350,7 +344,7 @@ export default function DochiCalendar() {
                         variant='ghost'
                         size="sm"
                         onClick={() => setViewMode("Week")}
-                        className={`rounded-full px-4 py-1 text-xs font-semibold transition-colors duration-200 ${viewMode === 'Week' ? 'bg-[#FFD4F2] text-purple-700' : 'text-gray-500 hover:bg-gray-200'}`}
+                        className={`rounded-full px-4 py-1 text-xs font-semibold transition-none ${viewMode === 'Week' ? 'bg-white text-gray-800' : 'text-gray-500 hover:bg-gray-200'}`}
                       >
                         Week
                       </Button>
@@ -368,7 +362,7 @@ export default function DochiCalendar() {
                       {calendarDays.map((dayObj, index) => (
                         <div
                           key={index}
-                          className="p-2 border-b border-r border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors"
+                          className="p-2 border-b border-r border-gray-200 cursor-pointer hover:bg-gray-100 transition-colors"
                           onClick={() => handleDateClick(dayObj.day, dayObj.isCurrentMonth, dayObj.isPrevMonth, dayObj.isNextMonth)}
                         >
                           <div className="flex justify-start items-start h-full">
@@ -401,7 +395,7 @@ export default function DochiCalendar() {
                                    <p className="text-xs text-gray-400">{hour % 12 === 0 ? 12 : hour % 12} {hour < 12 ? 'AM' : 'PM'}</p>
                                 </div>
                                 {Array.from({ length: 7 }).map((_, dayIndex) => (
-                                   <div key={dayIndex} className="border-r border-b border-gray-200 hover:bg-gray-50"></div>
+                                   <div key={dayIndex} className="border-r border-b border-gray-200 hover:bg-gray-100"></div>
                                 ))}
                              </div>
                           ))}

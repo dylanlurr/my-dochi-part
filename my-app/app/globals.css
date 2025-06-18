@@ -120,3 +120,21 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* In app/globals.css */
+.events-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.events-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.events-scrollbar::-webkit-scrollbar-thumb {
+  background-color: oklch(0.922 0 0 / 0.7); /* Using a semi-transparent border color */
+  border-radius: 4px;
+}
+
+.events-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: oklch(0.8 0 0 / 0.7); /* A darker color on hover */
+}
